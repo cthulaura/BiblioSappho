@@ -1,0 +1,31 @@
+{
+  "name": "bibliosappho",
+  "version": "1.0.0",
+  "description": "Media library for sapphic/lesbian content",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cthulaura/BiblioSappho.git"
+  },
+  "author": "Laura Rocha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cthulaura/BiblioSappho/issues"
+  },
+  "homepage": "https://github.com/cthulaura/BiblioSappho#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv-safe": "^8.2.0",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
