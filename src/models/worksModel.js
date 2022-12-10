@@ -9,11 +9,14 @@ const workSchema = new mongoose.Schema(
         title: { type: String, required: true },
         author: String,
         genre: { type: String, required: true },
-        medium: { type: String, required: true },
+        medium: { 
+            type: String, 
+            required: true,
+            enum: ['game', 'book', 'movie', 'TV', 'animation'] },
         plot: { type: String, default: "Empty." },
         comments: { type: String, default: "Empty." },
         queerRepresentation: { type: String, required: true },
-        isFavorite: { type: Boolean, required: true },
+        isFavorite: { type: Boolean, default: false },
         registeredBy: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,

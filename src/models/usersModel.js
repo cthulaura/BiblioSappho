@@ -9,10 +9,14 @@ const userSchema = new mongoose.Schema(
         name: { type: String, required: true },
         genderIdentity: { type: String, required: true },
         sexualOrientation: { type: String, required: true },
-        location: String,
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
-        bio: { type: String, default: "Empty." }
+        bio: { type: String, default: "Empty." },
+        favorites: [{
+          type: mongoose.Schema.Types.ObjectId,
+          default: "",
+          ref: "Work"
+      }]
     },
     { versionKey: false, }
 )
@@ -20,6 +24,7 @@ const userSchema = new mongoose.Schema(
 userSchema.post('save', function(error, doc, next) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
       next(new Error('This e-mail is already registered.'));
+
     } else {
       next();
     }

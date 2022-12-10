@@ -8,11 +8,13 @@ const registerUser = async (req, res) => {
     try {
       const encryptedPassword = bcrypt.hashSync(req.body.password, 10);
       req.body.password = encryptedPassword;
+
       const newUser = new users(req.body);
 
       const savedUser = await newUser.save();
 
       res.status(201).json({ message: "New user successfully registered", savedUser });
+
     } catch (error) {
       console.error(error);
       res.status(500).json(error.message);
@@ -21,8 +23,9 @@ const registerUser = async (req, res) => {
 
 const findUsers = async (req, res) => {
     try {
-      const allUsers = await users.find().select('name genderIdentity sexualOrientation bio');
+      const allUsers = await users.find().select('name genderIdentity sexualOrientation bio favorites').populate("favorites");
       res.status(200).json(allUsers);
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: error.message });
@@ -32,13 +35,16 @@ const findUsers = async (req, res) => {
 const findUserByID = async (req, res) => {
   try {
     const { id } = req.params;
-    if (id.match(/^[0-9a-fA-F]{24}$/)) {
-      const findUser = await users.findById(id).select("name genderIdentity sexualOrientation bio");
+
+    if (id.match(/^[0-9a-fA-F]{24}$/)) { 
+      const findUser = await users.findById(id).select("name genderIdentity sexualOrientation bio").populate("favorites");
     res.status(200).json(findUser);
     }
+
     else {
       res.status(404).json({ message: "User not found." })
     }
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -83,6 +89,7 @@ const updateUser = async (req, res) => {
       });
 
       res.status(200).json({ message: "User successfully updated", updateUser });
+
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: error.message });
@@ -96,8 +103,13 @@ const login = async (req, res) => {
         return res.status(404).send(`User registered with e-mail ${req.body.email} can't be found.`)
       }
 
-      const verifytePassword = bcrypt.compareSync(req.body.password, user.password)
-      if (!verifytePassword) {
+      if (!req.body.password) {
+        return res.status(400).send(`Please enter e-mail and password of the user.`);
+      }
+
+      const verifyPassword = bcrypt.compareSync(req.body.password, user.password)
+
+      if (!verifyPassword) {
         return res.status(403).send(`Password is incorrect. Please try again.`)
       }
 
@@ -112,7 +124,7 @@ const login = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    if(!req.get('authorization')){
+    if (!req.get('authorization')) {
       return res.status(401).send('Unauthorized request.')
     }
 
@@ -124,15 +136,20 @@ const deleteUser = async (req, res) => {
     }
 
     const err = jwt.verify(token, SECRET, function (error) {
-      if (error) return res.status(403).send("Unauthorized access.")
+      if (error) return error
     })
 
-    if (err) return res.status(401).send(`Not authorized.`)
+    if (err) {
+       return res.status(403).send("Unauthorized access.")
+    }
 
     const { id } = req.params;
+
     const deleteUser = await users.findByIdAndDelete(id);
+
     const message = `User ${deleteUser.name} was successfully deleted.`;
     res.status(200).json({ message })
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: error.message });
