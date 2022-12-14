@@ -10,6 +10,8 @@ Mulheres de atração homoafetiva, assim como outros grupos minoritários, são 
 
 Sabendo da importância de representar grupos minotários, inclusive em mídias, esse projeto permite expandir a visibilidade de mulheres que amam mulheres, com o cadastro de obras que demonstrem tais afetos.
 
+Quanto à decisões criativas, 
+
 ## rotas e retornos
 
 As possíveis requisições, seus métodos e funções são:
@@ -49,7 +51,7 @@ Desenvolvido por uma mulher trans lésbica, com apoio de toda a equipe da {repro
 </h1>
 
 <h6 align="center"> 
-Fotografia da autora nas escadas do Musem de Imagem e Som de Curitiba.
+Fotografia da autora nas escadas do Museu de Imagem e Som de Curitiba.
  </h6>
 
 [LinkedIn](https://www.linkedin.com/in/rocha-laura/)
