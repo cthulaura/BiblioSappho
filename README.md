@@ -40,7 +40,7 @@ Documentação da API também está disponível [online](https://bibliosappho.on
 
 
 
-### autora
+### 🏳️‍🌈 autora
 
 Desenvolvido por uma mulher trans lésbica, com apoio de toda a equipe da {reprograma} e turma On19.
 
