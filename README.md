@@ -10,7 +10,6 @@ Mulheres de atração homoafetiva, assim como outros grupos minoritários, são 
 
 Sabendo da importância de representar grupos minotários, inclusive em mídias, esse projeto permite expandir a visibilidade de mulheres que amam mulheres, com o cadastro de obras que demonstrem tais afetos.
 
-
 ## rotas e retornos
 
 As possíveis requisições, seus métodos e funções são:
@@ -34,9 +33,10 @@ As possíveis requisições, seus métodos e funções são:
 |DELETE|/works/remove/:id|remove uma obra cadastrada*|
 
 <h6>
-*Rotas nas quais é necessária autenticação, com token de acesso.
 
 Documentação da API também está disponível [online](https://bibliosappho.onrender.com/documentation-route/).
+
+*Rotas nas quais é necessária autenticação, com token de acesso.
 </h6>
 
 
