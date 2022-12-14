@@ -52,22 +52,18 @@ const findUserByID = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    if(!req.get('authorization')){
-      return res.status(401).send('Unauthorized request.')
-    }
+    //Auth process
+    if (!req.get('authorization')) { return res.status(401).send('Unauthorized request.') }
 
     const token = req.get('authorization').split('Bearer ')[1];
-    console.log(token);
-
-    if (!token) {
-      return res.status(401).send(`Header error.`);
-    }
+    if (!token) { return res.status(401).send(`Header error.`); }
 
     const err = jwt.verify(token, SECRET, function (error) {
       if (error) return error
     })
 
-    if (err) return res.status(401).send(`Not authorized.`)
+    if (err) { return res.status(403).send("Unauthorized access.") }
+    //Auth process /end
 
     const encryptedPassword = bcrypt.hashSync(req.body.password, 10);
     req.body.password = encryptedPassword;
@@ -124,24 +120,18 @@ const login = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   try {
-    if (!req.get('authorization')) {
-      return res.status(401).send('Unauthorized request.')
-    }
+    //Auth process
+    if (!req.get('authorization')) { return res.status(401).send('Unauthorized request.') }
 
     const token = req.get('authorization').split('Bearer ')[1];
-    console.log(token);
-
-    if (!token) {
-      return res.status(401).send(`Header error.`);
-    }
+    if (!token) { return res.status(401).send(`Header error.`); }
 
     const err = jwt.verify(token, SECRET, function (error) {
       if (error) return error
     })
 
-    if (err) {
-       return res.status(403).send("Unauthorized access.")
-    }
+    if (err) { return res.status(403).send("Unauthorized access.") }
+    //Auth process /end
 
     const { id } = req.params;
 

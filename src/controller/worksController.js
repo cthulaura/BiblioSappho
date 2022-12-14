@@ -2,7 +2,6 @@ const works = require('../models/worksModel');
 const users = require('../models/usersModel');
 const SECRET = process.env.SECRET;
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 
 const addWork = async (req, res) => {
   try {
@@ -19,14 +18,13 @@ const addWork = async (req, res) => {
 
 const allWorks = async (req, res) => {
   try {
-    const allWorks = await works.find().populate("registeredBy", "name");
+    const allWorks = await works.find().select("-isFavorite").populate("registeredBy", "name");
     res.status(200).json(allWorks);
 
   } catch (error) {
     res.status(500).json(error.message);
   };
 };
-
 
 const findWorkByID = async (req, res) => {
   try {
@@ -46,25 +44,52 @@ const findWorkByID = async (req, res) => {
   }
 };
 
+const searchGenre = async (req, res) => {
+  try {
+    const findByGenre = await works.find({ genre: {"$regex": req.params.genre, "$options": "i"} }).select("-isFavorite").populate("registeredBy", "name");
+    
+    if (findByGenre.length == 0) {
+      return res.status(404).json({message: `No works with genre matching search: ${req.params.genre}. Help expand the database by registering something!`});
+    }
+
+    res.status(200).json(findByGenre)
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error.message);
+  };
+};
+
+const searchMedium = async (req, res) => {
+  try {
+    const findByMedium = await works.find({ medium: {"$regex": req.params.medium, "$options": "i"} }).select("-isFavorite").populate("registeredBy", "name");
+    
+    if (findByMedium.length == 0) {
+      return res.status(404).json({message: `No works with medium matching search: ${req.params.medium}. Help expand the database by registering something!`});
+    }
+
+    res.status(200).json(findByMedium)
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(error.message);
+  };
+};
+
 const updateWork = async (req, res) => {
   try {
-    if (!req.get('authorization')) {
-      return res.status(401).send('Unauthorized request.')
-    }
+    //Auth process
+    if (!req.get('authorization')) { return res.status(401).send('Unauthorized request.') }
 
     const token = req.get('authorization').split('Bearer ')[1];
-
-    if (!token) {
-      return res.status(401).send(`Header error.`);
-    }
+    if (!token) { return res.status(401).send(`Header error.`); }
 
     const err = jwt.verify(token, SECRET, function (error) {
       if (error) return error
     })
 
-    if (err) {
-      return res.status(403).send("Unauthorized access.")
-    }
+    if (err) { return res.status(403).send("Unauthorized access.") }
+    //Auth process /end
 
     const {
       comments
@@ -83,31 +108,27 @@ const updateWork = async (req, res) => {
 
 const favorite = async (req, res) => {
   try {
-    if (!req.get('authorization')) {
-      return res.status(401).send('Unauthorized request.')
-    }
+    //Auth process
+    if (!req.get('authorization')) { return res.status(401).send('Unauthorized request.') };
 
     const token = req.get('authorization').split('Bearer ')[1];
-
-    if (!token) {
-      return res.status(401).send(`Header error.`);
-    }
+    
+    if (!token) { return res.status(401).send(`Header error.`); }
 
     const err = jwt.verify(token, SECRET, function (error) {
       if (error) return error
-    })
+    });
 
-    if (err) {
-       return res.status(403).send("Unauthorized access.")
-    }
-    
+    if (err) { return res.status(403).send("Unauthorized access.") };
+    //Auth process /end
+
     const {
       isFavorite
     } = req.body;
 
-    const { workID } = req.query.workID;
-    const { userID } = req.query.userID;
-
+    const workID  = req.query.workID;
+    const userID = req.query.userID;
+    
     const updateWork = await works.findByIdAndUpdate(workID, {
       isFavorite: isFavorite
     });
@@ -117,16 +138,16 @@ const favorite = async (req, res) => {
     if (isFavorite == true) {
       updateUser = await users.findByIdAndUpdate(userID, {
         "$addToSet": { favorites: workID }
-      }
-      )}
+      })
+    }
 
     else {
       updateUser = await users.findByIdAndUpdate(userID, {
         "$pull": { favorites: workID }
-      }
-      )}
+      })
+    }
 
-    res.status(200).json({ message: `Successfully update favorite to ${isFavorite} for ${updateWork.title}:`, updateWork, updateUser });
+    res.status(200).json({ message: `Successfully updated favorite to ${isFavorite} for ${updateWork.title}:`, updateWork, updateUser });
 
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -135,23 +156,18 @@ const favorite = async (req, res) => {
 
 const removeWork = async (req, res) => {
   try {
-    if (!req.get('authorization')) {
-      return res.status(401).send('Unauthorized request.')
-    }
+    //Auth process
+    if (!req.get('authorization')) { return res.status(401).send('Unauthorized request.') }
 
     const token = req.get('authorization').split('Bearer ')[1];
-
-    if (!token) {
-      return res.status(401).send(`Header error.`);
-    }
+    if (!token) { return res.status(401).send(`Header error.`); }
 
     const err = jwt.verify(token, SECRET, function (error) {
       if (error) return error
     })
 
-    if (err) {
-      return res.status(403).send("Unauthorized access.")
-    }
+    if (err) { return res.status(403).send("Unauthorized access.") }
+    //Auth process /end
 
     const { id } = req.params;
 
@@ -170,6 +186,8 @@ module.exports = {
     addWork,
     allWorks,
     findWorkByID,
+    searchGenre,
+    searchMedium,
     updateWork,
     favorite,
     removeWork
