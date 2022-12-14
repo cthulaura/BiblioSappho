@@ -10,7 +10,6 @@ Mulheres de atração homoafetiva, assim como outros grupos minoritários, são 
 
 Sabendo da importância de representar grupos minotários, inclusive em mídias, esse projeto permite expandir a visibilidade de mulheres que amam mulheres, com o cadastro de obras que demonstrem tais afetos.
 
-Quanto à decisões criativas, 
 
 ## rotas e retornos
 
