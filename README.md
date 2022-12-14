@@ -32,11 +32,11 @@ As possíveis requisições, seus métodos e funções são:
 |DELETE|/users/delete/:id|apaga o perfil cadastrado de uma usuária*|
 |DELETE|/works/remove/:id|remove uma obra cadastrada*|
 
-<small>
-Rotas nas quais é necessária autenticação, com token de acesso.
+<h6>
+*Rotas nas quais é necessária autenticação, com token de acesso.
 
 Documentação da API também está disponível [online](https://bibliosappho.onrender.com/documentation-route/).
-</small>
+</h6>
 
 
 
