@@ -65,8 +65,10 @@ const updateUser = async (req, res) => {
     if (err) { return res.status(403).send("Unauthorized access.") }
     //Auth process /end
 
-    const encryptedPassword = bcrypt.hashSync(req.body.password, 10);
-    req.body.password = encryptedPassword;
+    if (req.body.password) {
+      const encryptedPassword = bcrypt.hashSync(req.body.password, 10);
+      req.body.password = encryptedPassword;
+    }
     const {
         name,
         genderIdentity,
